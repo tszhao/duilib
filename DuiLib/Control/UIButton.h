@@ -32,6 +32,9 @@ namespace DuiLib
 		void SetForeImage(LPCTSTR pStrImage);
 		LPCTSTR GetHotForeImage();
 		void SetHotForeImage(LPCTSTR pStrImage);
+        // 当鼠标移动到按钮时的光标形状
+        void SetCursor(LPCTSTR pStrCursor);
+        HCURSOR GetCursor();
 
 		void SetHotBkColor(DWORD dwColor);
 		DWORD GetHotBkColor() const;
@@ -54,6 +57,8 @@ namespace DuiLib
 		DWORD m_dwHotTextColor;
 		DWORD m_dwPushedTextColor;
 		DWORD m_dwFocusedTextColor;
+
+        HCURSOR m_focusCursor;
 
 		CDuiString m_sNormalImage;
 		CDuiString m_sHotImage;

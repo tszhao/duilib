@@ -25,7 +25,8 @@ m_dwFocusBorderColor(0),
 m_bColorHSL(false),
 m_nBorderSize(0),
 m_nBorderStyle(PS_SOLID),
-m_nTooltipWidth(300)
+m_nTooltipWidth(300),
+m_bAutoWidth(false)
 {
     m_cXY.cx = m_cXY.cy = 0;
     m_cxyFixed.cx = m_cxyFixed.cy = 0;
@@ -106,6 +107,13 @@ void CControlUI::SetText(LPCTSTR pstrText)
     if( m_sText == pstrText ) return;
 
     m_sText = pstrText;
+
+    if (m_bAutoWidth)
+    {
+        int width = GetContentWidth();
+        SetFixedWidth(width);
+    }
+
     Invalidate();
 }
 
@@ -294,6 +302,17 @@ void CControlUI::SetPos(RECT rc)
     m_pManager->Invalidate(invalidateRc);
 }
 
+void CControlUI::SetPos2(RECT rc)
+{
+    if( rc.right < rc.left ) rc.right = rc.left;
+    if( rc.bottom < rc.top ) rc.bottom = rc.top;
+
+    CDuiRect invalidateRc = m_rcItem;
+    if( ::IsRectEmpty(&invalidateRc) ) invalidateRc = rc;
+
+    m_rcItem = rc;
+}
+
 int CControlUI::GetWidth() const
 {
     return m_rcItem.right - m_rcItem.left;
@@ -323,6 +342,17 @@ void CControlUI::SetPadding(RECT rcPadding)
 {
     m_rcPadding = rcPadding;
     NeedParentUpdate();
+}
+
+void CControlUI::SetPadding(LPCTSTR pstrValue)
+{
+    RECT rcPadding = { 0 };
+    LPTSTR pstr = NULL;
+    rcPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+    rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+    rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+    rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);  
+    SetPadding(rcPadding);
 }
 
 SIZE CControlUI::GetFixedXY() const
@@ -734,6 +764,33 @@ CDuiString CControlUI::GetVirtualWnd() const
 	return str;
 }
 
+void CControlUI::SetAutoWidth(bool bAuto)
+{
+    if (m_bAutoWidth == bAuto)
+        return;
+
+    m_bAutoWidth = bAuto;
+    if (m_bAutoWidth)
+    {
+        int width = GetContentWidth();
+        SetFixedWidth(width);
+    }
+}
+
+bool CControlUI::IsAutoWidth()
+{
+    return m_bAutoWidth;
+}
+
+DWORD CControlUI::StringToColor(LPCTSTR pstrValue)
+{
+    if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+    LPTSTR pstr = NULL;
+    DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+
+    return clrColor;
+}
+
 void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("pos")) == 0 ) {
@@ -850,6 +907,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("shortcut")) == 0 ) SetShortcut(pstrValue[0]);
     else if( _tcscmp(pstrName, _T("menu")) == 0 ) SetContextMenuUsed(_tcscmp(pstrValue, _T("true")) == 0);
 	else if( _tcscmp(pstrName, _T("virtualwnd")) == 0 ) SetVirtualWnd(pstrValue);
+    else if( _tcscmp(pstrName, _T("autowidth")) == 0) SetAutoWidth(_tcscmp(pstrValue, _T("true")) == 0);
 }
 
 CControlUI* CControlUI::ApplyAttributeList(LPCTSTR pstrList)
@@ -996,6 +1054,11 @@ void CControlUI::PaintBorder(HDC hDC)
 void CControlUI::DoPostPaint(HDC hDC, const RECT& rcPaint)
 {
     return;
+}
+
+int CControlUI::GetContentWidth()
+{
+    return GetFixedWidth();
 }
 
 //************************************

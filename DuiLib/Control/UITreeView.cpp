@@ -28,7 +28,7 @@ namespace DuiLib
 		pCheckBox		= new CCheckBoxUI();
 		pItemButton		= new COptionUI();
 
-		this->SetFixedHeight(18);
+		this->SetFixedHeight(22);
 		this->SetFixedWidth(250);
 		pFolderButton->SetFixedWidth(GetFixedHeight());
 		pDottedLine->SetFixedWidth(2);

@@ -937,6 +937,8 @@ bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RE
     // 1¡¢aaa.jpg
     // 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
     // mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
+    // extend: destr='right,top,width,height'
+    //         destc='width,height'
 
     CDuiString sImageName = pStrImage;
     CDuiString sImageResType;
@@ -1007,6 +1009,25 @@ bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RE
 					if (rcItem.right > rc.right) rcItem.right = rc.right;
                     rcItem.bottom = rc.top + _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 					if (rcItem.bottom > rc.bottom) rcItem.bottom = rc.bottom;
+                }
+                else if ( sItem == _T("destr")) {
+                    rcItem.right = rc.right - _tcstol(sValue.GetData(), &pstr, 10); ASSERT(pstr);
+                    rcItem.top = rc.top + _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+                    rcItem.left = rcItem.right - _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+                    rcItem.bottom = rcItem.top + _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+                    if (rcItem.bottom > rc.bottom) rcItem.bottom = rc.bottom;
+                }
+                else if ( sItem == _T("destc")) {
+                    int width = _tcstol(sValue.GetData(), &pstr, 10);
+                    int height = _tcstol(pstr+1, &pstr, 10);
+                    int left = (rc.right-rc.left-width) / 2;
+                    int top = (rc.bottom-rc.top-height) / 2;
+                    if (left < 0) left = 0;
+                    if (top < 0) top = 0;
+                    rcItem.left = left;
+                    rcItem.top = top;
+                    rcItem.right = rcItem.left + width;
+                    rcItem.bottom = rcItem.top + height;
                 }
                 else if( sItem == _T("source") ) {
                     rcBmpPart.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);    

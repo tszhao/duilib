@@ -22,6 +22,7 @@ namespace DuiLib
 		void DoEvent(TEventUI& event);
 
 		void SetPos(RECT rc);
+        void SetPos2(RECT rc);
 		void DoPostPaint(HDC hDC, const RECT& rcPaint);
 
 		RECT GetThumbRect(bool bUseNew = false) const;

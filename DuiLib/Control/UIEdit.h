@@ -17,6 +17,8 @@ namespace DuiLib
 		LPVOID GetInterface(LPCTSTR pstrName);
 		UINT GetControlFlags() const;
 
+        virtual void SetFocus();
+
 		void SetEnabled(bool bEnable = true);
 		void SetText(LPCTSTR pstrText);
 		void SetMaxChar(UINT uMax);

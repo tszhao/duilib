@@ -29,7 +29,7 @@ LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
 	}
 	else if (wParam == VK_ESCAPE)
 	{
-		Close();
+		Close(IDCANCEL);
 		return TRUE;
 	}
 
@@ -164,9 +164,11 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	if( pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
 		&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
-			if( pControl && _tcsicmp(pControl->GetClass(), _T("ButtonUI")) != 0 && 
+			if( pControl && 
+                _tcsicmp(pControl->GetClass(), _T("ButtonUI")) != 0 && 
 				_tcsicmp(pControl->GetClass(), _T("OptionUI")) != 0 &&
-				_tcsicmp(pControl->GetClass(), _T("TextUI")) != 0 )
+				_tcsicmp(pControl->GetClass(), _T("TextUI")) != 0 &&
+                _tcsicmp(pControl->GetClass(), _T("EditUI")) != 0)
 				return HTCAPTION;
 	}
 
@@ -269,9 +271,12 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	m_PaintManager.AddPreMessageFilter(this);
 
 	CDialogBuilder builder;
-	CDuiString strResourcePath=m_PaintManager.GetInstancePath();
-	strResourcePath+=GetSkinFolder().GetData();
-	m_PaintManager.SetResourcePath(strResourcePath.GetData());
+	if (m_PaintManager.GetResourcePath().IsEmpty())
+	{	// 允许更灵活的资源路径定义
+		CDuiString strResourcePath=m_PaintManager.GetInstancePath();
+        strResourcePath+=GetSkinFolder().GetData();
+        m_PaintManager.SetResourcePath(strResourcePath.GetData());
+	}
 
 	switch(GetResourceType())
 	{
@@ -425,7 +430,7 @@ void WindowImplBase::OnClick(TNotifyUI& msg)
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if( sCtrlName == _T("closebtn") )
 	{
-		Close();
+		Close(IDCLOSE);
 		return; 
 	}
 	else if( sCtrlName == _T("minbtn"))

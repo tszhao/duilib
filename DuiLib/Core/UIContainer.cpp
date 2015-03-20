@@ -360,7 +360,7 @@ namespace DuiLib
 	void CContainerUI::LineUp()
 	{
 		int cyLine = 8;
-		if( m_pManager ) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
+		if( m_pManager ) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 58;
 
 		SIZE sz = GetScrollPos();
 		sz.cy -= cyLine;
@@ -370,7 +370,7 @@ namespace DuiLib
 	void CContainerUI::LineDown()
 	{
 		int cyLine = 8;
-		if( m_pManager ) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
+		if( m_pManager ) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 58;
 
 		SIZE sz = GetScrollPos();
 		sz.cy += cyLine;

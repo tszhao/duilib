@@ -55,6 +55,7 @@ HINSTANCE CPaintManagerUI::m_hInstance = NULL;
 HINSTANCE CPaintManagerUI::m_hResourceInstance = NULL;
 CDuiString CPaintManagerUI::m_pStrDefaultFontName;//added by cddjr at 05/18/2012
 CDuiString CPaintManagerUI::m_pStrResourcePath;
+CDuiString CPaintManagerUI::m_pStrImagePath;
 CDuiString CPaintManagerUI::m_pStrResourceZip;
 bool CPaintManagerUI::m_bCachedResourceZip = false;
 HANDLE CPaintManagerUI::m_hResourceZip = NULL;
@@ -201,6 +202,11 @@ const CDuiString& CPaintManagerUI::GetResourcePath()
     return m_pStrResourcePath;
 }
 
+const CDuiString& CPaintManagerUI::GetImagePath()
+{
+    return m_pStrImagePath;
+}
+
 const CDuiString& CPaintManagerUI::GetResourceZip()
 {
     return m_pStrResourceZip;
@@ -237,6 +243,14 @@ void CPaintManagerUI::SetResourcePath(LPCTSTR pStrPath)
     if( m_pStrResourcePath.IsEmpty() ) return;
     TCHAR cEnd = m_pStrResourcePath.GetAt(m_pStrResourcePath.GetLength() - 1);
     if( cEnd != _T('\\') && cEnd != _T('/') ) m_pStrResourcePath += _T('\\');
+}
+
+void CPaintManagerUI::SetImagePath(LPCTSTR pStrPath)
+{
+    m_pStrImagePath = pStrPath;
+    if( m_pStrImagePath.IsEmpty() ) return;
+    TCHAR cEnd = m_pStrImagePath.GetAt(m_pStrImagePath.GetLength() - 1);
+    if( cEnd != _T('\\') && cEnd != _T('/') ) m_pStrImagePath += _T('\\');
 }
 
 void CPaintManagerUI::SetResourceZip(LPVOID pVoid, unsigned int len)
@@ -341,7 +355,7 @@ SIZE CPaintManagerUI::GetClientSize() const
 {
     RECT rcClient = { 0 };
     ::GetClientRect(m_hWndPaint, &rcClient);
-    return CSize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
+    return CDuiSize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
 }
 
 SIZE CPaintManagerUI::GetInitSize()
@@ -1007,6 +1021,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             event.ptMouse = m_ptLastMousePos;
             event.wKeyState = MapKeyState();
             event.dwTimestamp = ::GetTickCount();
+            event.wParam = wParam;
+            event.lParam = lParam;
             m_pFocus->Event(event);
             m_pEventKey = m_pFocus;
         }
@@ -2200,7 +2216,18 @@ bool CPaintManagerUI::TranslateMessage(const LPMSG pMsg)
 	{
 		HWND hWndParent = ::GetParent(pMsg->hwnd);
 
-		for( int i = 0; i < m_aPreMessages.GetSize(); i++ ) 
+        // 从数组的最后向前遍历,为了解决model窗口中如果存在CEditUI控件的时候,
+        // 无法使用tab进行切换的问题.
+        // 问题描述: 一个主窗口A,再创建一个窗口B,使用模态对话框,并且,指定其父窗口为A,
+        //     窗口B中存在Edit控件,则再进行tab切换的时候,焦点总是在窗口A中.
+        // 原因分析: 因为之前遍历m_aPreMessages数组的时候,是从0开始向后遍历的,并且,由于
+        //     循环内部又在一直遍历父窗口(hTempParent), 因此,在遍历到窗口A的时候,由于窗口A
+        //     是B的父窗口,而Edit的父窗口是B,因此,下面的while循环就直接找到窗口A了,由于窗口
+        //     A处理了Tab控件,因此,直接返回了true,退出了循环,后面就不再进行遍历,即tab键只在
+        //     窗口A中进行了处理,窗口B根本就没有机会处理.
+        // 解决方式: 从后向前遍历m_aPreMessages数组,因为模态窗口肯定是在其父窗口之后创建的,
+        //     因此,先处理后创建的窗口,如果后创建的窗口没有处理,再交由先创建的窗口处理.
+		for( int i=m_aPreMessages.GetSize()-1; i>=0; --i)
 		{
 			CPaintManagerUI* pT = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);        
 			HWND hTempParent = hWndParent;

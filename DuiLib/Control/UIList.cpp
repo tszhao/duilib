@@ -647,7 +647,7 @@ void CListUI::Scroll(int dx, int dy)
 {
     if( dx == 0 && dy == 0 ) return;
     SIZE sz = m_pList->GetScrollPos();
-    m_pList->SetScrollPos(CSize(sz.cx + dx, sz.cy + dy));
+    m_pList->SetScrollPos(CDuiSize(sz.cx + dx, sz.cy + dy));
 }
 
 void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
@@ -905,6 +905,11 @@ int __cdecl CListBodyUI::ItemComareFunc(const void *item1, const void *item2)
 	return m_pCompareFunc((UINT_PTR)pControl1, (UINT_PTR)pControl2, m_compareData);
 }
 
+LPCTSTR CListBodyUI::GetClass() const
+{
+    return _T("ListBodyUI");
+}
+
 void CListBodyUI::SetScrollPos(SIZE szPos)
 {
     int cx = 0;
@@ -1017,7 +1022,7 @@ void CListBodyUI::SetPos(RECT rc)
     if( m_pOwner ) {
         CListHeaderUI* pHeader = m_pOwner->GetHeader();
         if( pHeader != NULL && pHeader->GetCount() > 0 ) {
-            cxNeeded = MAX(0, pHeader->EstimateSize(CSize(rc.right - rc.left, rc.bottom - rc.top)).cx);
+            cxNeeded = MAX(0, pHeader->EstimateSize(CDuiSize(rc.right - rc.left, rc.bottom - rc.top)).cx);
         }
     }
 
@@ -1466,7 +1471,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
 
 SIZE CListHeaderItemUI::EstimateSize(SIZE szAvailable)
 {
-    if( m_cxyFixed.cy == 0 ) return CSize(m_cxyFixed.cx, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 14);
+    if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 14);
     return CControlUI::EstimateSize(szAvailable);
 }
 
@@ -1840,7 +1845,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
 
 SIZE CListLabelElementUI::EstimateSize(SIZE szAvailable)
 {
-    if( m_pOwner == NULL ) return CSize(0, 0);
+    if( m_pOwner == NULL ) return CDuiSize(0, 0);
 
     TListInfoUI* pInfo = m_pOwner->GetListInfo();
     SIZE cXY = m_cxyFixed;

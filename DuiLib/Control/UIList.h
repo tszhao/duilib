@@ -209,6 +209,7 @@ class UILIB_API CListBodyUI : public CVerticalLayoutUI
 public:
     CListBodyUI(CListUI* pOwner);
 
+    LPCTSTR GetClass() const;
     void SetScrollPos(SIZE szPos);
     void SetPos(RECT rc);
     void DoEvent(TEventUI& event);
@@ -430,7 +431,7 @@ public:
     void DoPaint(HDC hDC, const RECT& rcPaint);
 
     void DrawItemText(HDC hDC, const RECT& rcItem);    
-    void DrawItemBk(HDC hDC, const RECT& rcItem);
+    virtual void DrawItemBk(HDC hDC, const RECT& rcItem);
 
 protected:
     int m_iIndex;

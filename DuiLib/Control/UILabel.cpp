@@ -45,6 +45,9 @@ namespace DuiLib
 		m_ShadowOffset.Height	= 0.0f;
 		GdiplusStartup( &m_gdiplusToken,&m_gdiplusStartupInput, NULL);
 
+        // 默认控件如果放不下所有内容,最后的用省略号代替
+        m_uTextStyle |= DT_END_ELLIPSIS;
+
 		::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
 	}
 
@@ -149,7 +152,7 @@ namespace DuiLib
 
 	SIZE CLabelUI::EstimateSize(SIZE szAvailable)
 	{
-		if( m_cxyFixed.cy == 0 ) return CSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 4);
+		if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 4);
 		return CControlUI::EstimateSize(szAvailable);
 	}
 
@@ -1059,6 +1062,40 @@ namespace DuiLib
 			throw "CLabelUI::GetEnabledShadow";
 		}
 	}
+
+    void CLabelUI::SetEndellipsis(bool bEndellipsis)
+    {
+        if (bEndellipsis)
+            m_uTextStyle |= DT_END_ELLIPSIS;
+        else
+            m_uTextStyle &= ~DT_END_ELLIPSIS;
+    }
+
+    int CLabelUI::GetContentWidth()
+    {
+        if (!GetManager())
+            return GetFixedWidth();
+
+        int fontIndex = GetFont();
+        DuiLib::TFontInfo* pFontInfo = GetManager()->GetFontInfo(fontIndex);
+        if (!pFontInfo)
+            return GetFixedWidth();
+
+        Gdiplus::Font font((LPCTSTR)pFontInfo->sFontName, Gdiplus::REAL(pFontInfo->iSize), 0,
+            Gdiplus::UnitPixel);
+        Gdiplus::Graphics graphic(GetManager()->GetPaintDC());
+        Gdiplus::PointF origin(Gdiplus::REAL(0.0), Gdiplus::REAL(0.0));
+        Gdiplus::RectF boundingBox;
+        graphic.SetPageUnit(UnitPixel);
+        Gdiplus::Status status = graphic.MeasureString(GetText(), GetText().GetLength(), &font, origin, &boundingBox);
+        int width = static_cast<int>(boundingBox.Width);
+        if (width < GetMinWidth())
+            width = GetMinWidth();
+        else if (width > GetMaxWidth())
+            width = GetMaxWidth();
+
+        return width;
+    }
 
 	//************************************
 	// Method:    SetGradientLength

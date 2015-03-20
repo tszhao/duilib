@@ -181,6 +181,13 @@ namespace DuiLib
 		return UIFLAG_SETCURSOR | UIFLAG_TABSTOP;
 	}
 
+    void CEditUI::SetFocus()
+    {
+        __super::SetFocus();
+
+        SetSelAll();
+    }
+
 	void CEditUI::DoEvent(TEventUI& event)
 	{
 		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
@@ -461,7 +468,7 @@ namespace DuiLib
 
 	SIZE CEditUI::EstimateSize(SIZE szAvailable)
 	{
-		if( m_cxyFixed.cy == 0 ) return CSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 6);
+		if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 6);
 		return CControlUI::EstimateSize(szAvailable);
 	}
 

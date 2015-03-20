@@ -194,6 +194,7 @@ public:
     static CDuiString GetCurrentPath();
     static HINSTANCE GetResourceDll();
     static const CDuiString& GetResourcePath();
+    static const CDuiString& GetImagePath();
     static const CDuiString& GetResourceZip();
     static bool IsCachedResourceZip();
     static HANDLE GetResourceZipHandle();
@@ -201,6 +202,7 @@ public:
     static void SetCurrentPath(LPCTSTR pStrPath);
     static void SetResourceDll(HINSTANCE hInst);
     static void SetResourcePath(LPCTSTR pStrPath);
+    static void SetImagePath(LPCTSTR pStrPath);
 	static void SetResourceZip(LPVOID pVoid, unsigned int len);
     static void SetResourceZip(LPCTSTR pstrZip, bool bCachedResourceZip = false);
     static void GetHSL(short* H, short* S, short* L);
@@ -390,6 +392,7 @@ private:
     static HINSTANCE m_hResourceInstance;
     static CDuiString m_pStrResourcePath;
     static CDuiString m_pStrResourceZip;
+    static CDuiString m_pStrImagePath;
     static bool m_bCachedResourceZip;
     static HANDLE m_hResourceZip;
     static short m_H;

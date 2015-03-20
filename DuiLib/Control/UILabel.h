@@ -73,6 +73,10 @@ namespace DuiLib
 		bool		GetEnabledStroke();
 		void		SetEnabledShadow(bool _EnabledShadowe);
 		bool		GetEnabledShadow();
+        void        SetEndellipsis(bool bEndellipsis);
+
+        virtual int GetContentWidth();
+
 		
 	protected:
 		DWORD	m_dwTextColor;

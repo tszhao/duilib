@@ -38,6 +38,10 @@ namespace DuiLib
 			// 		{
 			// 			pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER;
 			// 		}
+            if (pInfo)
+            {
+                pInfo->dwFlags|=(DOCHOSTUIFLAG_NO3DBORDER);
+            }
 			return S_OK;
 		}
 

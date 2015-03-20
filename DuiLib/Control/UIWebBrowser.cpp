@@ -185,6 +185,7 @@ void DuiLib::CWebBrowserUI::GoForward()
 /// DWebBrowserEvents2
 void DuiLib::CWebBrowserUI::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->BeforeNavigate2(pDisp,url,Flags,TargetFrameName,PostData,Headers,Cancel);
@@ -193,6 +194,7 @@ void DuiLib::CWebBrowserUI::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARI
 
 void DuiLib::CWebBrowserUI::NavigateError( IDispatch *pDisp,VARIANT * &url,VARIANT *&TargetFrameName,VARIANT *&StatusCode,VARIANT_BOOL *&Cancel )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->NavigateError(pDisp,url,TargetFrameName,StatusCode,Cancel);
@@ -201,6 +203,7 @@ void DuiLib::CWebBrowserUI::NavigateError( IDispatch *pDisp,VARIANT * &url,VARIA
 
 void DuiLib::CWebBrowserUI::NavigateComplete2( IDispatch *pDisp,VARIANT *&url )
 {
+    DUI__Trace(__FUNCTIONW__);
 	CComPtr<IDispatch> spDoc;   
 	m_pWebBrowser2->get_Document(&spDoc);   
 
@@ -219,6 +222,7 @@ void DuiLib::CWebBrowserUI::NavigateComplete2( IDispatch *pDisp,VARIANT *&url )
 
 void DuiLib::CWebBrowserUI::ProgressChange( LONG nProgress, LONG nProgressMax )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->ProgressChange(nProgress,nProgressMax);
@@ -227,6 +231,7 @@ void DuiLib::CWebBrowserUI::ProgressChange( LONG nProgress, LONG nProgressMax )
 
 void DuiLib::CWebBrowserUI::NewWindow3( IDispatch **pDisp, VARIANT_BOOL *&Cancel, DWORD dwFlags, BSTR bstrUrlContext, BSTR bstrUrl )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->NewWindow3(pDisp,Cancel,dwFlags,bstrUrlContext,bstrUrl);
@@ -234,6 +239,7 @@ void DuiLib::CWebBrowserUI::NewWindow3( IDispatch **pDisp, VARIANT_BOOL *&Cancel
 }
 void DuiLib::CWebBrowserUI::CommandStateChange(long Command,VARIANT_BOOL Enable)
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->CommandStateChange(Command,Enable);
@@ -243,6 +249,7 @@ void DuiLib::CWebBrowserUI::CommandStateChange(long Command,VARIANT_BOOL Enable)
 // IDownloadManager
 STDMETHODIMP DuiLib::CWebBrowserUI::Download( /* [in] */ IMoniker *pmk, /* [in] */ IBindCtx *pbc, /* [in] */ DWORD dwBindVerb, /* [in] */ LONG grfBINDF, /* [in] */ BINDINFO *pBindInfo, /* [in] */ LPCOLESTR pszHeaders, /* [in] */ LPCOLESTR pszRedir, /* [in] */ UINT uiCP )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->Download(pmk,pbc,dwBindVerb,grfBINDF,pBindInfo,pszHeaders,pszRedir,uiCP);
@@ -253,6 +260,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::Download( /* [in] */ IMoniker *pmk, /* [in] 
 // IDocHostUIHandler
 STDMETHODIMP DuiLib::CWebBrowserUI::ShowContextMenu( DWORD dwID, POINT* pptPosition, IUnknown* pCommandTarget, IDispatch* pDispatchObjectHit )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->ShowContextMenu(dwID,pptPosition,pCommandTarget,pDispatchObjectHit);
@@ -262,6 +270,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::ShowContextMenu( DWORD dwID, POINT* pptPosit
 
 STDMETHODIMP DuiLib::CWebBrowserUI::GetHostInfo( DOCHOSTUIINFO* pInfo )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->GetHostInfo(pInfo);
@@ -271,6 +280,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::GetHostInfo( DOCHOSTUIINFO* pInfo )
 
 STDMETHODIMP DuiLib::CWebBrowserUI::ShowUI( DWORD dwID, IOleInPlaceActiveObject* pActiveObject, IOleCommandTarget* pCommandTarget, IOleInPlaceFrame* pFrame, IOleInPlaceUIWindow* pDoc )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->ShowUI(dwID,pActiveObject,pCommandTarget,pFrame,pDoc);
@@ -280,6 +290,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::ShowUI( DWORD dwID, IOleInPlaceActiveObject*
 
 STDMETHODIMP DuiLib::CWebBrowserUI::HideUI()
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->HideUI();
@@ -289,6 +300,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::HideUI()
 
 STDMETHODIMP DuiLib::CWebBrowserUI::UpdateUI()
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->UpdateUI();
@@ -298,6 +310,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::UpdateUI()
 
 STDMETHODIMP DuiLib::CWebBrowserUI::EnableModeless( BOOL fEnable )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->EnableModeless(fEnable);
@@ -307,6 +320,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::EnableModeless( BOOL fEnable )
 
 STDMETHODIMP DuiLib::CWebBrowserUI::OnDocWindowActivate( BOOL fActivate )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->OnDocWindowActivate(fActivate);
@@ -316,6 +330,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::OnDocWindowActivate( BOOL fActivate )
 
 STDMETHODIMP DuiLib::CWebBrowserUI::OnFrameWindowActivate( BOOL fActivate )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->OnFrameWindowActivate(fActivate);
@@ -325,6 +340,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::OnFrameWindowActivate( BOOL fActivate )
 
 STDMETHODIMP DuiLib::CWebBrowserUI::ResizeBorder( LPCRECT prcBorder, IOleInPlaceUIWindow* pUIWindow, BOOL fFrameWindow )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->ResizeBorder(prcBorder,pUIWindow,fFrameWindow);
@@ -334,6 +350,7 @@ STDMETHODIMP DuiLib::CWebBrowserUI::ResizeBorder( LPCRECT prcBorder, IOleInPlace
 
 STDMETHODIMP DuiLib::CWebBrowserUI::TranslateAccelerator( LPMSG lpMsg, const GUID* pguidCmdGroup, DWORD nCmdID )
 {
+    DUI__Trace(__FUNCTIONW__);
 	if (m_pWebBrowserEventHandler)
 	{
 		return m_pWebBrowserEventHandler->TranslateAccelerator(lpMsg,pguidCmdGroup,nCmdID);

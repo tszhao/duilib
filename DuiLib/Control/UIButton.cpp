@@ -11,6 +11,8 @@ namespace DuiLib
 		,m_dwHotBkColor(0)
 	{
 		m_uTextStyle = DT_SINGLELINE | DT_VCENTER | DT_CENTER;
+        // 默认情况下,按钮的focus光标状态也是箭头形状
+        m_focusCursor = ::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW));
 	}
 
 	LPCTSTR CButtonUI::GetClass() const
@@ -104,7 +106,7 @@ namespace DuiLib
 			// return;
 		}
 		if( event.Type == UIEVENT_SETCURSOR ) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
+			::SetCursor(GetCursor());
 			return;
 		}
 		CLabelUI::DoEvent(event);
@@ -155,6 +157,8 @@ namespace DuiLib
 	void CButtonUI::SetHotTextColor(DWORD dwColor)
 	{
 		m_dwHotTextColor = dwColor;
+        if (m_dwPushedTextColor == 0)
+            SetFocusedTextColor(dwColor);
 	}
 
 	DWORD CButtonUI::GetHotTextColor() const
@@ -202,6 +206,9 @@ namespace DuiLib
 	{
 		m_sHotImage = pStrImage;
 		Invalidate();
+
+        if (m_sFocusedImage.IsEmpty())
+            SetFocusedImage(pStrImage);
 	}
 
 	LPCTSTR CButtonUI::GetPushedImage()
@@ -293,9 +300,20 @@ namespace DuiLib
 		Invalidate();
 	}
 
+    void CButtonUI::SetCursor(LPCTSTR pStrCursor)
+    {
+        if (_tcsicmp(pStrCursor, _T("hand")) == 0)
+            m_focusCursor = ::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND));
+    }
+
+    HCURSOR CButtonUI::GetCursor()
+    {
+        return m_focusCursor;
+    }
+
 	SIZE CButtonUI::EstimateSize(SIZE szAvailable)
 	{
-		if( m_cxyFixed.cy == 0 ) return CSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 8);
+		if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 8);
 		return CControlUI::EstimateSize(szAvailable);
 	}
 
@@ -308,34 +326,11 @@ namespace DuiLib
 		else if( _tcscmp(pstrName, _T("disabledimage")) == 0 ) SetDisabledImage(pstrValue);
 		else if( _tcscmp(pstrName, _T("foreimage")) == 0 ) SetForeImage(pstrValue);
 		else if( _tcscmp(pstrName, _T("hotforeimage")) == 0 ) SetHotForeImage(pstrValue);
-		else if( _tcscmp(pstrName, _T("hotbkcolor")) == 0 )
-		{
-			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
-			LPTSTR pstr = NULL;
-			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
-			SetHotBkColor(clrColor);
-		}
-		else if( _tcscmp(pstrName, _T("hottextcolor")) == 0 )
-		{
-			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
-			LPTSTR pstr = NULL;
-			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
-			SetHotTextColor(clrColor);
-		}
-		else if( _tcscmp(pstrName, _T("pushedtextcolor")) == 0 )
-		{
-			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
-			LPTSTR pstr = NULL;
-			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
-			SetPushedTextColor(clrColor);
-		}
-		else if( _tcscmp(pstrName, _T("focusedtextcolor")) == 0 )
-		{
-			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
-			LPTSTR pstr = NULL;
-			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
-			SetFocusedTextColor(clrColor);
-		}
+        else if( _tcscmp(pstrName, _T("cursor")) == 0 ) SetCursor(pstrValue);
+		else if( _tcscmp(pstrName, _T("hotbkcolor")) == 0 ) SetHotBkColor(StringToColor(pstrValue));
+		else if( _tcscmp(pstrName, _T("hottextcolor")) == 0 ) SetHotTextColor(StringToColor(pstrValue));
+		else if( _tcscmp(pstrName, _T("pushedtextcolor")) == 0 ) SetPushedTextColor(StringToColor(pstrValue));
+		else if( _tcscmp(pstrName, _T("focusedtextcolor")) == 0 ) SetFocusedTextColor(StringToColor(pstrValue));
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
 

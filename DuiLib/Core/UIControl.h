@@ -70,12 +70,17 @@ public:
     // 位置相关
     virtual const RECT& GetPos() const;
     virtual void SetPos(RECT rc);
+    // 与SetPos方法完成同样的工作,即设置控件的位置.
+    // 但是,调用该方法并不会强制刷新页面,仅仅设置属性,如果
+    // 需要刷新UI,则由父控件等进行刷新的时候,会重新加载该区域进行刷新
+    virtual void SetPos2(RECT rc);
     virtual int GetWidth() const;
     virtual int GetHeight() const;
     virtual int GetX() const;
     virtual int GetY() const;
     virtual RECT GetPadding() const;
     virtual void SetPadding(RECT rcPadding); // 设置外边距，由上层窗口绘制
+    virtual void SetPadding(LPCTSTR pstrValue);
     virtual SIZE GetFixedXY() const;         // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
     virtual void SetFixedXY(SIZE szXY);      // 仅float为true时有效
     virtual int GetFixedWidth() const;       // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
@@ -155,12 +160,20 @@ public:
     virtual void PaintStatusImage(HDC hDC);
     virtual void PaintText(HDC hDC);
     virtual void PaintBorder(HDC hDC);
-
     virtual void DoPostPaint(HDC hDC, const RECT& rcPaint);
+
+    virtual int GetContentWidth();
 
 	//虚拟窗口参数
 	void SetVirtualWnd(LPCTSTR pstrValue);
 	CDuiString GetVirtualWnd() const;
+    // 根据内容,自动设置文本宽度
+    void SetAutoWidth(bool bAuto);
+    bool IsAutoWidth();
+
+protected:
+    // 由字符串类型的颜色值转换成DWORD数值类型的颜色
+    DWORD StringToColor(LPCTSTR pstrValue);
 
 public:
     CEventSource OnInit;
@@ -191,6 +204,7 @@ protected:
     bool m_bFloat;
     bool m_bSetPos; // 防止SetPos循环调用
     TRelativePosUI m_tRelativePos;
+    bool m_bAutoWidth;  // 如果该值为true,将根据内容自动设置控件宽度
 
     CDuiString m_sText;
     CDuiString m_sToolTip;
