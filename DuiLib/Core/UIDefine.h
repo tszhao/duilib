@@ -207,7 +207,7 @@ protected:                                                                \
 
   //定义timer消息--执行函数宏
 #define DUI_ON_TIMER()                                                    \
-	{ DUI_MSGTYPE_TIMER, _T(""), DuiSig_vn,(DUI_PMSG)&OnTimer },          \
+	{ DUI_MSGTYPE_TIMER, _T(""), DuiSig_vn,(DUI_PMSG)&OnDuiTimer },          \
 
 
 ///

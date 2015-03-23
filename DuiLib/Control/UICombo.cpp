@@ -253,7 +253,11 @@ int CComboUI::GetCurSel() const
 
 bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
 {
-    if( m_pWindow != NULL ) m_pWindow->Close();
+    // 如果下面注释的内容正常执行的话,操作的时候可能不方便.
+    // 具体会出现下面问题:当combox出现下拉的时候,如果鼠标滚动或者是键盘上下
+    // 进行选择时,窗口直接关闭了,给用户的体验不好,因此,不进行关闭,只有用户
+    // 进行选择或者是combox失去焦点的时候,才关闭.
+    //if( m_pWindow != NULL ) m_pWindow->Close();
     if( iIndex == m_iCurSel ) return true;
     int iOldSel = m_iCurSel;
     if( m_iCurSel >= 0 ) {

@@ -11,7 +11,7 @@ namespace DuiLib
 LPBYTE WindowImplBase::m_lpResourceZIPBuffer=NULL;
 
 DUI_BEGIN_MESSAGE_MAP(WindowImplBase,CNotifyPump)
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnDuiClick)
 DUI_END_MESSAGE_MAP()
 
 void WindowImplBase::OnFinalMessage( HWND hWnd )
@@ -213,6 +213,24 @@ LRESULT WindowImplBase::OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 }
 #endif
 
+LRESULT WindowImplBase::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    bHandled = FALSE;
+    return 0;
+}
+
+LRESULT WindowImplBase::OnNcLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    bHandled = FALSE;
+    return 0;
+}
+
+LRESULT WindowImplBase::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    bHandled = FALSE;
+    return 0;
+}
+
 LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	SIZE szRoundCorner = m_PaintManager.GetRoundCorner();
@@ -390,7 +408,7 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:		lRes = OnMouseWheel(uMsg, wParam, lParam, bHandled); break;
 #endif
 	case WM_SIZE:			lRes = OnSize(uMsg, wParam, lParam, bHandled); break;
-	case WM_CHAR:		lRes = OnChar(uMsg, wParam, lParam, bHandled); break;
+	case WM_CHAR:		    lRes = OnChar(uMsg, wParam, lParam, bHandled); break;
 	case WM_SYSCOMMAND:		lRes = OnSysCommand(uMsg, wParam, lParam, bHandled); break;
 	case WM_KEYDOWN:		lRes = OnKeyDown(uMsg, wParam, lParam, bHandled); break;
 	case WM_KILLFOCUS:		lRes = OnKillFocus(uMsg, wParam, lParam, bHandled); break;
@@ -398,7 +416,10 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:		lRes = OnLButtonUp(uMsg, wParam, lParam, bHandled); break;
 	case WM_LBUTTONDOWN:	lRes = OnLButtonDown(uMsg, wParam, lParam, bHandled); break;
 	case WM_MOUSEMOVE:		lRes = OnMouseMove(uMsg, wParam, lParam, bHandled); break;
-	case WM_MOUSEHOVER:	lRes = OnMouseHover(uMsg, wParam, lParam, bHandled); break;
+	case WM_MOUSEHOVER:	    lRes = OnMouseHover(uMsg, wParam, lParam, bHandled); break;
+    case WM_TIMER:          lRes = OnTimer(uMsg, wParam, lParam, bHandled); break;
+    case WM_NCLBUTTONUP:    lRes = OnNcLButtonUp(uMsg, wParam, lParam, bHandled); break;
+    case WM_ACTIVATE:       lRes = OnActivate(uMsg, wParam, lParam, bHandled); break;
 	default:				bHandled = FALSE; break;
 	}
 	if (bHandled) return lRes;
@@ -425,7 +446,7 @@ LONG WindowImplBase::GetStyle()
 	return styleValue;
 }
 
-void WindowImplBase::OnClick(TNotifyUI& msg)
+void WindowImplBase::OnDuiClick(TNotifyUI& msg)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if( sCtrlName == _T("closebtn") )

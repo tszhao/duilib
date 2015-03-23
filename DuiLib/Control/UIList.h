@@ -361,6 +361,12 @@ public:
     void DoPaint(HDC hDC, const RECT& rcPaint);
 
     void DrawItemText(HDC hDC, const RECT& rcItem);
+
+    void SetTextColor(DWORD dwColor);
+    DWORD GetTextColor();
+
+protected:
+    DWORD m_dwTextColor;
 };
 
 

@@ -1785,6 +1785,7 @@ void CListElementUI::DrawItemBk(HDC hDC, const RECT& rcItem)
 //
 
 CListLabelElementUI::CListLabelElementUI()
+    : m_dwTextColor(0)
 {
 }
 
@@ -1882,16 +1883,21 @@ void CListLabelElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
 
     if( m_pOwner == NULL ) return;
     TListInfoUI* pInfo = m_pOwner->GetListInfo();
-    DWORD iTextColor = pInfo->dwTextColor;
-    if( (m_uButtonState & UISTATE_HOT) != 0 ) {
-        iTextColor = pInfo->dwHotTextColor;
+    DWORD iTextColor = m_dwTextColor;
+    if (m_dwTextColor == 0)
+    {
+        DWORD iTextColor = pInfo->dwTextColor;
+        if( (m_uButtonState & UISTATE_HOT) != 0 ) {
+            iTextColor = pInfo->dwHotTextColor;
+        }
+        if( IsSelected() ) {
+            iTextColor = pInfo->dwSelectedTextColor;
+        }
+        if( !IsEnabled() ) {
+            iTextColor = pInfo->dwDisabledTextColor;
+        }
     }
-    if( IsSelected() ) {
-        iTextColor = pInfo->dwSelectedTextColor;
-    }
-    if( !IsEnabled() ) {
-        iTextColor = pInfo->dwDisabledTextColor;
-    }
+	
     int nLinks = 0;
     RECT rcText = rcItem;
     rcText.left += pInfo->rcTextPadding.left;
@@ -1907,6 +1913,20 @@ void CListLabelElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
         pInfo->nFont, DT_SINGLELINE | pInfo->uTextStyle);
 }
 
+void CListLabelElementUI::SetTextColor(DWORD dwColor)
+{
+    if (m_dwTextColor == dwColor)
+        return;
+
+    m_dwTextColor = dwColor;
+
+    Invalidate();
+}
+
+DWORD CListLabelElementUI::GetTextColor()
+{
+    return m_dwTextColor;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
